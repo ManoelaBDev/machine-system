@@ -13,7 +13,3 @@ export interface UpdateMachine {
     name?: string;
     type?: string;
 }
-
-export interface DeleteMachine {
-    id: string;
-}
