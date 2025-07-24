@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import * as machineService from "../services/machineService";
 
-export const getAll = async (_req: Request, res: Response) => {
-  const machines = await machineService.getAll();
+export const getListar = async (_req: Request, res: Response) => {
+  const machines = await machineService.getListar();
   res.json(machines);
 };
 
-export const create = async (req: Request, res: Response) => {
+export const newMaquina = async (req: Request, res: Response) => {
   const { name, tipo } = req.body;
-  const machine = await machineService.create({ name, tipo });
+  const machine = await machineService.newMaquina({ name, tipo });
   res.status(201).json(machine);
 };
 
@@ -19,8 +19,8 @@ export const update = async (req: Request, res: Response) => {
   res.json(machine);
 };
 
-export const remove = async (req: Request, res: Response) => {
+export const deleteMaquina = async (req: Request, res: Response) => {
   const { id } = req.params;
-  await machineService.remove(id);
+  await machineService.deleteMaquina(id);
   res.status(204).send();
 };

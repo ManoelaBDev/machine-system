@@ -5,10 +5,10 @@ import * as machineController from "../controller/machineController";
 
 const router = Router();
 
-router.get("/", machineController.getAll);
-router.post("/", zodValidator(createMachineSchema), machineController.create);
-router.put("/:id", zodValidator(createMachineSchema), machineController.update);
-router.delete("/:id", machineController.remove);
+router.get("/machines", machineController.getListar);
+router.post("/machines", zodValidator(createMachineSchema), machineController.newMaquina);
+router.put("/machines/:id", zodValidator(createMachineSchema), machineController.update);
+router.delete("/machines/:id", machineController.deleteMaquina);
 
 export default router;
 
