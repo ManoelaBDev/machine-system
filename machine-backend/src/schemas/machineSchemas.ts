@@ -6,3 +6,5 @@ export const createMachineSchema = z.object({
     tipo: z.string().min(2),
   }),
 });
+
+

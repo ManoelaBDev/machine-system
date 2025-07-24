@@ -6,7 +6,6 @@ export const zodValidator =
     (req: Request, res: Response, next: NextFunction) => {
       const result = schema.safeParse({
         body: req.body,
-        query: req.query,
         params: req.params,
       });
 
