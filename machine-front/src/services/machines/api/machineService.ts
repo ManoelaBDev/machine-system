@@ -1,12 +1,6 @@
 import { Machine, CreateMachine, UpdateMachine } from './types';
 import { API_BASE_URL } from '@/lib/api';
 
-const mockMachines: Machine[] = [
-    { id: '1', name: 'Lathe', type: 'CNC' },
-    { id: '2', name: 'Drill', type: 'Manual' },
-];
-
-
 export async function getAllMachines(): Promise<Machine[]> {
     const response = await fetch(`${API_BASE_URL}`);
 
