@@ -1,50 +1,62 @@
 import { Machine, CreateMachine, UpdateMachine } from './types';
+import { API_BASE_URL } from '@/lib/api';
 
 const mockMachines: Machine[] = [
     { id: '1', name: 'Lathe', type: 'CNC' },
     { id: '2', name: 'Drill', type: 'Manual' },
 ];
 
-function simulateRequest<T>(responseData: T, shouldSimulateFailure = false, responseDelayMilliseconds = 500): Promise<T> {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (shouldSimulateFailure) {
-                reject(new Error('Erro simulado na requisição'));
-            } else {
-                resolve(responseData);
-            }
-        }, responseDelayMilliseconds);
-    });
-}
 
 export async function getAllMachines(): Promise<Machine[]> {
-    return simulateRequest(mockMachines);
+    const response = await fetch(`${API_BASE_URL}`);
+
+    if (!response.ok) {
+        throw new Error(`Erro ao obter lista de máquinas: ${response.statusText}`);
+    }
+    
+    return response.json();
 }
 
 export async function createNewMachine(machineToCreate: CreateMachine): Promise<Machine> {
-    const newMachineObject: Machine = {
-        id: crypto.randomUUID(),
-        ...machineToCreate,
-    };
-    mockMachines.push(newMachineObject);
+    const response = await fetch(`${API_BASE_URL}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(machineToCreate),
+    });
 
-    return simulateRequest(newMachineObject);
+    if (!response.ok) {
+        throw new Error(`Erro ao criar a máquina: ${response.statusText}`);
+    }
+    
+    return response.json();
 }
 
 export async function updateExistingMachine(machineId: string, machineUpdates: UpdateMachine): Promise<Machine> {
-    const foundMachine = mockMachines.find(machineItem => machineItem.id === machineId);
-    if (!foundMachine) {
-        return simulateRequest<Machine>(null as any, true);
+    const response = await fetch(`${API_BASE_URL}${machineId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(machineUpdates),
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Erro ao atualizar a máquina: ${response.statusText}`);
     }
-    Object.assign(foundMachine, machineUpdates);
-    return simulateRequest(foundMachine);
+    
+    return response.json();
 }
 
 export async function deleteExistingMachine(machineId: string): Promise<{ success: boolean }> {
-    const machineIndex = mockMachines.findIndex(machineItem => machineItem.id === machineId);
-    if (machineIndex === -1) {
-        return simulateRequest<{ success: boolean }>(null as any, true);
+    const response = await fetch(`${API_BASE_URL}${machineId}`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        throw new Error(`Erro ao deletar a máquina: ${response.statusText}`);
     }
-    mockMachines.splice(machineIndex, 1);
-    return simulateRequest({ success: true });
+
+    return { success: true };
 }
