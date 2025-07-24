@@ -11,6 +11,5 @@ router.post("/machines", zodValidator(createMachineSchema), machineController.ne
 router.put("/machines/:id", zodValidator(createMachineSchema), machineController.update);
 router.delete("/machines/:id", zodValidator(machineIdSchemas), machineController.deleteMaquina);
 
-
 export default router;
 

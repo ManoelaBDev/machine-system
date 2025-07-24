@@ -11,6 +11,6 @@ app.use("/health", () => {
   console.log("Funcionando")
 });
 
-app.listen(3000, () => {
-  console.log("🚀 Servidor rodando em http://localhost:3000");
+app.listen(3333, () => {
+  console.log("🚀 API rodando em http://localhost:3333");
 });
