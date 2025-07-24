@@ -6,11 +6,6 @@ app.use(express.json());
 
 app.use("/", machineRoutes);
 
-app.use("/health", () => {
-
-  console.log("Funcionando")
-});
-
 app.listen(3333, () => {
   console.log("🚀 API rodando em http://localhost:3333");
 });
