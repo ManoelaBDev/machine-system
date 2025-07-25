@@ -1,15 +1,15 @@
 export interface Machine {
     id: string;
     name: string;
-    type: string;
+    tipo: string;
 }
 
 export interface CreateMachine {
     name: string;
-    type: string;
+    tipo: string;
 }
 
 export interface UpdateMachine {
     name?: string;
-    type?: string;
+    tipo?: string;
 }
