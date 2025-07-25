@@ -8,4 +8,4 @@ export const machineSchema = z.object({
         .string(),
 });
 
-export type Machine = z.infer<typeof machineSchema>;
+export type MachineRuleZod = z.infer<typeof machineSchema>;
