@@ -33,7 +33,7 @@ export default function MachineRow({ machine }: Props) {
                 <TableCell>
                     <IconButton
                         aria-label="Editar"
-                        onClick={() => router.push(`/machines/${machine.id}/edit`)}
+                        onClick={() => router.push(`/pages/machines/[id]/${machine.id}`)}
                     >
                         <EditIcon />
                     </IconButton>
