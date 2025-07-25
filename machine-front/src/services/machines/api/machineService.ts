@@ -8,7 +8,7 @@ const mockMachines: Machine[] = [
 
 
 export async function getAllMachines(): Promise<Machine[]> {
-    const response = await fetch(`${API_BASE_URL}`);
+    const response = await fetch(`${API_BASE_URL}/machines`);
 
     if (!response.ok) {
         throw new Error(`Erro ao obter lista de máquinas: ${response.statusText}`);
