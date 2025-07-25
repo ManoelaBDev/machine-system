@@ -2,11 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import MachineFormContainer from "@/components/containers/MachineFormContainer";
 import { Machine } from "@/services/machines/api/types";
-import axios from "axios";
 import { CircularProgress, Alert, Box } from "@mui/material";
-
+import { API_BASE_URL } from "@/lib/api";
+import axios from "axios";
+import MachineFormContainer from "@/components/containers/MachineFormContainer";
 
 export default function EditMachinePage() {
     const searchParams = useSearchParams();
@@ -26,7 +26,7 @@ export default function EditMachinePage() {
         const fetchMachine = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:3333/machines/${id}`);
+                const response = await axios.get(`${API_BASE_URL}/machines/${id}`);
                 setMachine(response.data);
             } catch (err) {
                 if (axios.isAxiosError(err)) {
