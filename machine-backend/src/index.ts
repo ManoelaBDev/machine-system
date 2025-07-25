@@ -6,9 +6,12 @@ app.use(express.json());
 
 app.use("/", machineRoutes);
 
-app.use("/health", () => {
+app.use("/health", (req, res) => {
 
-  console.log("Funcionando")
+  res.status(200).json({
+    status: "ok",
+    message: "API is running",
+  });
 });
 
 app.listen(3333, () => {
