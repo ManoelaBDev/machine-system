@@ -1,38 +1,37 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import DialogTitle from '@mui/joy/DialogTitle';
-import DialogContent from '@mui/joy/DialogContent';
-import Stack from '@mui/joy/Stack';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
+import * as React from "react";
+import Button from "@mui/joy/Button";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import Modal from "@mui/joy/Modal";
+import ModalDialog from "@mui/joy/ModalDialog";
+import DialogTitle from "@mui/joy/DialogTitle";
+import DialogContent from "@mui/joy/DialogContent";
+import Stack from "@mui/joy/Stack";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
 
 // Importando os tipos
-import { Machine, MachineStatus } from './MachineTable';
+import { Machine, MachineStatus } from "./MachineTable";
 
 interface MachineFormProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Machine, 'id'>) => void;
+  onSubmit: (data: Omit<Machine, "id">) => void;
   initialData?: Machine | null;
 }
 
 const defaultState = {
-  name: '',
-  tipo: '',
-  status: 'Online' as MachineStatus,
+  name: "",
+  tipo: "",
+  status: "Online" as MachineStatus,
 };
 
 export default function MachineForm({ open, onClose, onSubmit, initialData }: MachineFormProps) {
   const [formData, setFormData] = React.useState(defaultState);
 
-  // Efeito para popular o formulário quando o modo de edição é ativado
   React.useEffect(() => {
     if (initialData) {
       setFormData({
@@ -43,7 +42,7 @@ export default function MachineForm({ open, onClose, onSubmit, initialData }: Ma
     } else {
       setFormData(defaultState);
     }
-  }, [initialData, open]); // Roda quando o modal abre ou os dados mudam
+  }, [initialData, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,13 +61,13 @@ export default function MachineForm({ open, onClose, onSubmit, initialData }: Ma
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit(formData);
-    onClose(); // Fecha o modal após a submissão
+    onClose();
   };
 
   return (
     <Modal open={open} onClose={onClose}>
       <ModalDialog>
-        <DialogTitle>{initialData ? 'Editar Máquina' : 'Adicionar Nova Máquina'}</DialogTitle>
+        <DialogTitle>{initialData ? "Editar Máquina" : "Adicionar Nova Máquina"}</DialogTitle>
         <DialogContent>Preencha os detalhes da máquina abaixo.</DialogContent>
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
@@ -88,12 +87,12 @@ export default function MachineForm({ open, onClose, onSubmit, initialData }: Ma
                 <Option value="Manutenção">Manutenção</Option>
               </Select>
             </FormControl>
-            <Stack direction="row" spacing={2} sx={{ pt: 2, justifyContent: 'flex-end' }}>
+            <Stack direction="row" spacing={2} sx={{ pt: 2, justifyContent: "flex-end" }}>
               <Button type="button" variant="plain" color="neutral" onClick={onClose}>
                 Cancelar
               </Button>
               <Button type="submit">
-                {initialData ? 'Salvar Alterações' : 'Adicionar'}
+                {initialData ? "Salvar Alterações" : "Adicionar"}
               </Button>
             </Stack>
           </Stack>
