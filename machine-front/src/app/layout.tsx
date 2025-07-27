@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { QueryProvider } from "./providers/query-provider"
+import MuiProvider from "../components/providers/MuiProvider";
 
 import "./globals.css";
 
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+        <MuiProvider>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
+        </MuiProvider>
       </body>
     </html>
   );
