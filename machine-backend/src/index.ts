@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import machineRoutes from "./routes/machineRoutes";
-import cors from "cors";
 
 const app = express();
 
