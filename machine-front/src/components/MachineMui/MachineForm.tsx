@@ -1,20 +1,27 @@
 "use client";
 
 import * as React from "react";
-import Button from "@mui/joy/Button";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
-import Modal from "@mui/joy/Modal";
-import ModalDialog from "@mui/joy/ModalDialog";
-import DialogTitle from "@mui/joy/DialogTitle";
-import DialogContent from "@mui/joy/DialogContent";
-import Stack from "@mui/joy/Stack";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Modal,
+  ModalDialog,
+  DialogTitle,
+  DialogContent,
+  Stack,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Option,
+  Button,
+  Typography,
+} from "@mui/joy";
 
-// Importando os tipos
 import { Machine, MachineStatus } from "./MachineTable";
+import { machineSchema, MachineRuleZod } from "@/schemas/machineSchema";
+import { useCreateMachine } from "@/services/machines/hooks/useCreateMachine";
+import { useUpdateMachine } from "@/services/machines/hooks/useUpdateMachine";
 
 interface MachineFormProps {
   open: boolean;
@@ -23,75 +30,110 @@ interface MachineFormProps {
   initialData?: Machine | null;
 }
 
-const defaultState = {
-  name: "",
-  tipo: "",
-  status: "Online" as MachineStatus,
-};
+const statusOptions: MachineStatus[] = ["Online", "Offline", "Manutenção"];
 
-export default function MachineForm({ open, onClose, onSubmit, initialData }: MachineFormProps) {
-  const [formData, setFormData] = React.useState(defaultState);
+export default function MachineForm({ open, onClose, onSubmit, initialData, }: MachineFormProps) {
+  const { register, handleSubmit, reset, formState: { errors }, setValue, } =
+    useForm<MachineRuleZod>({
+      resolver: zodResolver(machineSchema),
+      defaultValues: {
+        name: "",
+        tipo: "",
+        status: "Online",
+      },
+    });
+
+  const createMachine = useCreateMachine();
+  const updateMachine = useUpdateMachine();
 
   React.useEffect(() => {
     if (initialData) {
-      setFormData({
+      reset({
         name: initialData.name,
         tipo: initialData.tipo,
         status: initialData.status,
       });
     } else {
-      setFormData(defaultState);
+      reset({
+        name: "",
+        tipo: "",
+        status: "Online",
+      });
     }
-  }, [initialData, open]);
+  }, [initialData, reset]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (
-    event: React.SyntheticEvent | null,
-    newValue: string | null,
-  ) => {
-    if (newValue) {
-      setFormData((prev) => ({ ...prev, status: newValue as MachineStatus }));
+  const onFormSubmit: SubmitHandler<MachineRuleZod> = async (data) => {
+    try {
+      if (initialData) {
+        await updateMachine.mutateAsync(data);
+      } else {
+        await createMachine.mutateAsync(data);
+      }
+      onClose();
+    } catch (error) {
+      console.error("Erro ao salvar máquina:", error);
     }
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    onSubmit(formData);
-    onClose();
   };
 
   return (
     <Modal open={open} onClose={onClose}>
       <ModalDialog>
-        <DialogTitle>{initialData ? "Editar Máquina" : "Adicionar Nova Máquina"}</DialogTitle>
+        <DialogTitle>
+          {initialData ? "Editar Máquina" : "Adicionar Nova Máquina"}
+        </DialogTitle>
         <DialogContent>Preencha os detalhes da máquina abaixo.</DialogContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Stack spacing={2}>
-            <FormControl required>
+            <FormControl required error={!!errors.name}>
               <FormLabel>Nome da Máquina</FormLabel>
-              <Input name="name" value={formData.name} onChange={handleChange} autoFocus />
+              <Input autoFocus {...register("name")} />
+              {errors.name && (
+                <Typography color="danger" level="body-xs">
+                  {errors.name.message}
+                </Typography>
+              )}
             </FormControl>
-            <FormControl required>
+
+            <FormControl required error={!!errors.tipo}>
               <FormLabel>Tipo</FormLabel>
-              <Input name="tipo" value={formData.tipo} onChange={handleChange} />
+              <Input {...register("tipo")} />
+              {errors.tipo && (
+                <Typography color="danger" level="body-xs">
+                  {errors.tipo.message}
+                </Typography>
+              )}
             </FormControl>
-            <FormControl required>
+
+            <FormControl required error={!!errors.status}>
               <FormLabel>Status</FormLabel>
-              <Select name="status" value={formData.status} onChange={handleSelectChange}>
-                <Option value="Online">Online</Option>
-                <Option value="Offline">Offline</Option>
-                <Option value="Manutenção">Manutenção</Option>
+              <Select
+                defaultValue={initialData?.status || "Online"}
+                onChange={(_, value) => {
+                  if (value) setValue("status", value as MachineStatus);
+                }}
+              >
+                {statusOptions.map((status) => (
+                  <Option key={status} value={status}>
+                    {status}
+                  </Option>
+                ))}
               </Select>
+              {errors.status && (
+                <Typography color="danger" level="body-xs">
+                  {errors.status.message}
+                </Typography>
+              )}
             </FormControl>
-            <Stack direction="row" spacing={2} sx={{ pt: 2, justifyContent: "flex-end" }}>
+
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{ pt: 2, justifyContent: "flex-end" }}
+            >
               <Button type="button" variant="plain" color="neutral" onClick={onClose}>
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button type="submit" loading={createMachine.isPending || updateMachine.isPending}>
                 {initialData ? "Salvar Alterações" : "Adicionar"}
               </Button>
             </Stack>

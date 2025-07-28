@@ -11,6 +11,7 @@ model Machine {
   id        String   @id @default(uuid())
   name      String
   tipo      String
+  status    String 
 
   @@map("machine_colunas")
 }

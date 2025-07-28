@@ -12,8 +12,8 @@ export const getListar = async (req: Request, res: Response) => {
 
 export const newMaquina = async (req: Request, res: Response) => {
   try {
-    const { name, tipo } = req.body;
-    const machine = await machineService.newMaquina({ name, tipo });
+    const { name, tipo, status } = req.body;
+    const machine = await machineService.newMaquina({ name, tipo, status });
     res.status(201).json(machine);
   } catch (error) {
     console.log("Erro ao adicionar maquina", error)
@@ -24,8 +24,8 @@ export const newMaquina = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, tipo } = req.body;
-    const machine = await machineService.update(id, { name, tipo });
+    const { name, tipo, status } = req.body;
+    const machine = await machineService.update(id, { name, tipo, status });
     res.json(machine);
   } catch (error) {
     console.log("Erro ao atualizar maquina", error)
