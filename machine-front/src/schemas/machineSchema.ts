@@ -7,9 +7,6 @@ export const machineSchema = z.object({
     tipo: z
         .string()
         .min(1, { message: "Tipo da máquina precisa ser fornecido" }),
-    status: z
-        .string()
-        .min(1, { message: "Status precisa ser fornecido" }),
 });
 
 export type MachineRuleZod = z.infer<typeof machineSchema>;

@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/joy";
 
-import { Machine, MachineStatus } from "./MachineTable";
+import { Machine } from "./MachineTable";
 import { machineSchema, MachineRuleZod } from "@/schemas/machineSchema";
 import { useCreateMachine } from "@/services/machines/hooks/useCreateMachine";
 import { useUpdateMachine } from "@/services/machines/hooks/useUpdateMachine";
@@ -30,8 +30,6 @@ interface MachineFormProps {
   initialData?: Machine | null;
 }
 
-const statusOptions: MachineStatus[] = ["Online", "Offline", "Manutenção"];
-
 export default function MachineForm({ open, onClose, onSubmit, initialData, }: MachineFormProps) {
   const { register, handleSubmit, reset, formState: { errors }, setValue, } =
     useForm<MachineRuleZod>({
@@ -39,7 +37,6 @@ export default function MachineForm({ open, onClose, onSubmit, initialData, }: M
       defaultValues: {
         name: "",
         tipo: "",
-        status: "Online",
       },
     });
 
@@ -51,13 +48,11 @@ export default function MachineForm({ open, onClose, onSubmit, initialData, }: M
       reset({
         name: initialData.name,
         tipo: initialData.tipo,
-        status: initialData.status,
       });
     } else {
       reset({
         name: "",
         tipo: "",
-        status: "Online",
       });
     }
   }, [initialData, reset]);
@@ -65,7 +60,7 @@ export default function MachineForm({ open, onClose, onSubmit, initialData, }: M
   const onFormSubmit: SubmitHandler<MachineRuleZod> = async (data) => {
     try {
       if (initialData) {
-        await updateMachine.mutateAsync(data);
+        await updateMachine.mutateAsync({ ...data, id: initialData.id });
       } else {
         await createMachine.mutateAsync(data);
       }
@@ -100,27 +95,6 @@ export default function MachineForm({ open, onClose, onSubmit, initialData, }: M
               {errors.tipo && (
                 <Typography color="danger" level="body-xs">
                   {errors.tipo.message}
-                </Typography>
-              )}
-            </FormControl>
-
-            <FormControl required error={!!errors.status}>
-              <FormLabel>Status</FormLabel>
-              <Select
-                defaultValue={initialData?.status || "Online"}
-                onChange={(_, value) => {
-                  if (value) setValue("status", value as MachineStatus);
-                }}
-              >
-                {statusOptions.map((status) => (
-                  <Option key={status} value={status}>
-                    {status}
-                  </Option>
-                ))}
-              </Select>
-              {errors.status && (
-                <Typography color="danger" level="body-xs">
-                  {errors.status.message}
                 </Typography>
               )}
             </FormControl>

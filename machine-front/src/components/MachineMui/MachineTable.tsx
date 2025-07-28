@@ -103,7 +103,6 @@ export default function MachineTable() {
                         <tr>
                             <th style={{ width: 240 }}>Nome da Máquina</th>
                             <th style={{ width: 200 }}>Tipo</th>
-                            <th style={{ width: 140 }}>Status</th>
                             <th style={{ width: 80, textAlign: "center" }}>Ações</th>
                         </tr>
                     </thead>
