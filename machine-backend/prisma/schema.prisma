@@ -8,10 +8,9 @@ datasource db {
 }
 
 model Machine {
-  id        String   @id @default(uuid())
-  name      String
-  tipo      String
-  status    String 
+  id     String @id @default(uuid())
+  name   String
+  tipo   String
 
   @@map("machine_colunas")
 }
